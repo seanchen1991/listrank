@@ -2,25 +2,23 @@ use std::mem;
 use rand::{thread_rng, Rng};
 use rand::seq::SliceRandom;
 
-const NULL = !0;
+const NULL: i64 = !0;
 
-fn gen_list_and_head(n: usize) -> (usize, Vec<i64>) {
+fn gen_list_and_head(n: usize) -> (i64, Vec<i64>) {
     let mut rng = thread_rng();
-    let mut list: Vec<i64> = (0..n).map(|i| {
-        rng.gen_range(0, i)
-    }).collect();
+    let mut pi: Vec<i64> = (0..n as i64).collect();
+
+    pi.shuffle(&mut rng);
 
     let mut next: Vec<i64> = vec![0; n]; 
 
     for i in 0..n-1 {
-        mem::replace(&mut next[list[i] as usize], list[i+1].clone());
+        mem::replace(&mut next[pi[i] as usize], pi[i+1].clone());
     }
 
-    mem::replace(&mut next[list[n-1] as usize], NULL);
+    mem::replace(&mut next[pi[n-1] as usize], NULL);
 
-    
-
-    next
+    (pi[0].clone, next)
 }
 
 fn seq_listrank(list: &[i64]) -> Vec<i64> {
