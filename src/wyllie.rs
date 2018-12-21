@@ -3,8 +3,26 @@ extern crate listrank;
 use listrank::*;
 use rayon::prelude::*;
 
+fn jump_list(next: Vec<i64>) -> Vec<i64> {
+    let mut n2: Vec<i64> = vec![0; next.len()];
+    let par_iter = (0..next.len()).into_par_iter();
+
+    for i in par_iter {
+        if next[i] != NULL {
+            n2[i] = next[next[i] as usize];
+        }
+    }
+
+    let next = next.into_par_iter()
+        .map(|i| {
+            n2[i as usize]
+        }).collect();
+
+    next
+}
+
 fn update_ranks(ranks: Vec<i64>, next: &[i64]) -> Vec<i64> {
-    let mut r2: Vec<i64> = (0..ranks.len()).into_par_iter().collect();
+    let mut r2: Vec<i64> = vec![0; ranks.len()];
     let par_iter = (0..ranks.len()).into_par_iter();
 
     for i in par_iter {
@@ -13,9 +31,9 @@ fn update_ranks(ranks: Vec<i64>, next: &[i64]) -> Vec<i64> {
         }
     }
 
-    ranks.into_par_iter()
+    let ranks = ranks.into_par_iter()
         .map(|i| {
-            r2[i]
+            r2[i as usize]
         }).collect();
 
     ranks
@@ -31,20 +49,18 @@ fn wyllie_listrank(head: usize, next: &[i64]) -> Vec<i64> {
             1
         }).collect();
 
-    let mut r2 = r1.clone();
-
     let mut n1: Vec<i64> = (0..n as usize)
         .into_par_iter()
         .map(|i| {
             next[i].clone()
         }).collect();
 
-    let mut n2 = n1.clone();
-
     r1[head] = 0;
-    r2[head] = 0;
 
     for _ in x {
-
+        r1 = update_ranks(r1, &n1);
+        n1 = copy_over(n1);
     }
+
+    r1
 }
