@@ -19,14 +19,17 @@ fn gen_list_and_head(n: usize) -> (i64, Vec<i64>) {
     (head, list)
 }
 
-fn seq_listrank(list: &[i64]) -> Vec<i64> {
+fn seq_listrank(head: i64, next: &[i64]) -> Vec<i64> {
+    let mut head = head;
     let mut rank = 0;
-    let mut countdown = list.len();
-    let mut ranks = Vec::with_capacity(list.len());
+    let mut ranks = vec![0; next.len()];
 
-    while countdown >= 0 {
-        ranks.push()
+    while head != NULL {
+        ranks[head] = rank++;
+        head = next[head];
     }
+
+    ranks
 }
 
 pub fn seq_list_rank<T: PartialEq>(head: usize, next: &[Option<T>]) -> Vec<usize> {
