@@ -4,7 +4,7 @@ use rand::seq::SliceRandom;
 
 const NULL: i64 = !0;
 
-fn gen_list_and_head(n: usize) -> (i64, Vec<i64>) {
+pub fn gen_list_and_head(n: usize) -> (i64, Vec<i64>) {
     let mut rng = thread_rng();
     let mut list: Vec<i64> = (0..n as i64).collect();
 
@@ -19,45 +19,16 @@ fn gen_list_and_head(n: usize) -> (i64, Vec<i64>) {
     (head, list)
 }
 
-fn seq_listrank(head: i64, next: &[i64]) -> Vec<i64> {
+pub fn seq_listrank(head: i64, next: &[i64]) -> Vec<i64> {
     let mut head = head;
     let mut rank = 0;
     let mut ranks = vec![0; next.len()];
 
     while head != NULL {
-        ranks[head] = rank++;
-        head = next[head];
+        ranks[head as usize] = rank;
+        rank += 1;
+        head = next[head as usize];
     }
 
     ranks
-}
-
-pub fn seq_list_rank<T: PartialEq>(head: usize, next: &[Option<T>]) -> Vec<usize> {
-    let mut r = 0;
-    let mut ranks: Vec<usize> = vec![0; n];
-
-    loop {
-        match head as_ref {
-            Some(_) => {
-                r += 1;
-                ranks[head.unwrap()] = r;
-                head = &mut next[head.unwrap()];
-            }
-            None => { break; }
-        }
-    }
-
-    ranks
-}
-
-#[cfg(test)]
-mod tests {
-    use gen_list;
-
-    #[test]
-    fn test_gen_list_length() {
-        let length = 50;
-        let list = gen_list(50);
-        assert_eq!(list.len(), length);
-    }
 }
